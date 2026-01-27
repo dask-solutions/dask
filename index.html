@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="DASK Solutions - Lab Management Software Solution. Single application to enter site data digitally, manage lab results, and create & distribute reports.">
+    <title>DASK Solutions Inc.</title>
+    <link rel="icon" type="image/png" href="images/DaskLogo.png">
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --sgd-header-h: 3.125rem;
+            --sgd-footer-h: 5rem;
+            --sgd-footer-margin-top: 1rem;
+            --sgd-card-title-color: #4da758;
+            --sgd-card-subtitle-color: #4da758;
+            --sgd-row-color1: #f2f4fb;
+            --sgd-row-color2: #d6eaff;
+            --sgd-bleed-color: #535c6b;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.5;
+            color: #161616;
+        }
+
+        /* Grid System */
+        .grid {
+            max-width: 1584px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        .row {
+            display: flex;
+            flex-wrap: wrap;
+            margin: 0 -0.5rem;
+        }
+
+        .col {
+            padding: 0 0.5rem;
+            width: 100%;
+        }
+
+        .col-sm-4 { width: 100%; }
+        .col-md-4 { width: 100%; }
+        .col-lg-4 { width: 100%; }
+        .col-sm-2 { width: 50%; }
+
+        @media (min-width: 672px) {
+            .col-md-4 { width: 50%; }
+        }
+
+        @media (min-width: 1056px) {
+            .col-lg-4 { width: 33.333%; }
+        }
+
+        /* Header */
+        .header {
+            box-shadow: 0 6px 12px 0 rgba(0, 0, 0, 0.1);
+            width: 100%;
+            position: sticky;
+            top: 0;
+            left: 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: var(--sgd-header-h);
+            background-color: #f7fff9e6;
+            z-index: 9000;
+            overflow: hidden;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+        }
+
+        .header-right {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .header-left-item {
+            margin-left: 0.3rem;
+            height: calc(var(--sgd-header-h) - 0.5rem);
+            display: flex;
+            align-items: center;
+        }
+
+        .header-logo {
+            height: 100%;
+        }
+
+        .header-right-item {
+            margin-right: 0.3rem;
+            padding: 0.5rem;
+            font-size: 115%;
+            text-decoration: none;
+            color: #161616;
+        }
+
+        .header-left-item:hover,
+        .header-right-item:hover {
+            background-color: #def5ea;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        /* Hero Section */
+        .hero-bleed {
+            background-color: var(--sgd-bleed-color);
+        }
+
+        .hero-container {
+            padding-top: 3rem;
+            padding-bottom: 3rem;
+            color: #ffffff;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .hero-text-container {
+            flex: 1;
+            min-width: 300px;
+            padding: 2rem;
+        }
+
+        .hero-text-first-line {
+            margin-bottom: 0.5rem;
+            font-size: 2.3rem;
+            font-weight: 300;
+        }
+
+        .hero-text-line {
+            display: flex;
+            align-items: baseline;
+            font-size: 2.625rem;
+            font-weight: 300;
+            letter-spacing: 0;
+            line-height: 1.25;
+        }
+
+        .hero-text-line div {
+            margin-left: 0.5rem;
+        }
+
+        .hero-text-icon {
+            fill: var(--sgd-card-title-color);
+            width: 32px;
+            height: 32px;
+            flex-shrink: 0;
+        }
+
+        .hero-img-container {
+            flex: 1;
+            min-width: 300px;
+            padding: 1rem;
+        }
+
+        .hero-img {
+            width: 100%;
+            border-radius: 5px;
+        }
+
+        .hero-btn-container {
+            float: right;
+            margin-top: 1rem;
+        }
+
+        .btn-secondary {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background-color: transparent;
+            color: #fff;
+            border: 1px solid #fff;
+            padding: 0.75rem 1.25rem;
+            font-size: 0.875rem;
+            font-weight: 400;
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .btn-secondary:hover {
+            background-color: #fff;
+            color: var(--sgd-bleed-color);
+        }
+
+        .btn-secondary svg {
+            fill: currentColor;
+            width: 16px;
+            height: 16px;
+        }
+
+        /* Row Card (Section Header) */
+        .row-card {
+            margin-top: 3rem;
+            margin-bottom: 3rem;
+        }
+
+        .row-card-header {
+            font-size: 2.25rem;
+            font-weight: 300;
+            line-height: 1.25;
+            text-align: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .row-card-subheader {
+            font-size: 1.25rem;
+            font-weight: 400;
+            line-height: 1.4;
+            text-align: center;
+            margin-bottom: 0.3rem;
+            color: #525252;
+        }
+
+        /* Icon Explainer Card */
+        .icon-exp-buffer {
+            padding: 1rem;
+            height: 100%;
+            background-color: #fff;
+            box-shadow: 0px 5px 10px #b7beb9;
+            border-radius: 10px;
+            transition: 0.6s;
+        }
+
+        .icon-exp-buffer:hover {
+            box-shadow: 10px 15px 20px #a7afa9;
+        }
+
+        .icon-exp {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 1rem;
+            border: 1px solid #8184de;
+            border-radius: 10px;
+            height: 100%;
+        }
+
+        .icon-exp-icon-container {
+            width: 64px;
+        }
+
+        .icon-exp-icon {
+            width: 100%;
+            margin-bottom: 1rem;
+        }
+
+        .icon-exp-text {
+            font-size: 1rem;
+            font-weight: 400;
+            line-height: 1.5;
+            text-align: center;
+        }
+
+        /* Explainer Card */
+        .exp-card {
+            padding-left: 5%;
+            padding-right: 5%;
+        }
+
+        .exp-card-title {
+            font-size: 1.75rem;
+            font-weight: 400;
+            line-height: 1.29;
+            color: var(--sgd-card-title-color);
+            margin-bottom: 1rem;
+        }
+
+        .exp-card-content {
+            font-size: 1.125rem;
+            font-weight: 400;
+            line-height: 1.5;
+            margin-bottom: 1rem;
+        }
+
+        /* Picture Card */
+        .pic-card-container {
+            padding: 0 15%;
+            padding-bottom: 1rem;
+        }
+
+        .pic-card-bg {
+            background-color: #bebef0;
+            box-shadow: 0px 5px 10px #b7beb9;
+            border-radius: 10px;
+            padding: 1rem;
+        }
+
+        .pic-card-img {
+            width: 100%;
+        }
+
+        /* Icon Explainer Row Card */
+        .icon-exp-row-buffer {
+            padding: 1rem;
+            height: 100%;
+            background-color: var(--sgd-row-color2);
+            box-shadow: 0px 5px 10px #b7beb9;
+            border-radius: 10px;
+        }
+
+        .icon-exp-row {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            border-radius: 10px;
+            height: 100%;
+            padding: 3rem;
+        }
+
+        .icon-exp-row-icon-container {
+            width: 64px;
+        }
+
+        .icon-exp-row-icon {
+            width: 100%;
+            margin-bottom: 1rem;
+        }
+
+        .icon-exp-row-header {
+            font-size: 2.25rem;
+            font-weight: 300;
+            line-height: 1.25;
+            margin-bottom: 0.5rem;
+            color: var(--sgd-card-title-color);
+            text-align: center;
+        }
+
+        .icon-exp-row-subheader {
+            font-size: 1.25rem;
+            font-weight: 400;
+            line-height: 1.4;
+            margin-bottom: 0.3rem;
+            color: var(--sgd-card-subtitle-color);
+            text-align: center;
+        }
+
+        .icon-exp-row-body {
+            font-size: 0.875rem;
+            font-weight: 400;
+            line-height: 1.29;
+            text-align: center;
+        }
+
+        /* Column Explainer Card */
+        .col-exp-card {
+            padding-left: 5%;
+            padding-right: 5%;
+            border-right: 1px dashed lightgray;
+            height: 100%;
+            border-bottom: 1px solid;
+            border-bottom-width: medium;
+            border-bottom-style: ridge;
+            border-bottom-right-radius: 10px;
+            padding-bottom: 1rem;
+        }
+
+        .col-exp-card-title {
+            font-size: 1.75rem;
+            font-weight: 400;
+            line-height: 1.29;
+            color: var(--sgd-card-title-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .col-exp-card-content {
+            font-size: 1.125rem;
+            font-weight: 400;
+            line-height: 1.5;
+            margin-bottom: 1rem;
+        }
+
+        /* Row styling */
+        .content-row {
+            margin-bottom: 2rem;
+        }
+
+        .row-a,
+        .row-b,
+        .row-c {
+            margin-bottom: 2rem;
+            padding-top: 5%;
+            padding-bottom: 5%;
+            background-color: var(--sgd-row-color1);
+            border-radius: 10px;
+        }
+
+        .row-card-section {
+            margin-bottom: 2rem;
+        }
+
+        .col-condensed {
+            padding: 0 15%;
+        }
+
+        .col-centered {
+            align-self: center;
+        }
+
+        .col-spacing {
+            margin-top: 1rem;
+        }
+
+        .col-spacer {
+            margin-bottom: 3rem;
+        }
+
+        /* Footer */
+        .footer {
+            padding: 1rem 0.5rem;
+            background-color: var(--sgd-bleed-color);
+            color: #fff;
+            margin-top: var(--sgd-footer-margin-top);
+            min-height: var(--sgd-footer-h);
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: space-evenly;
+            cursor: pointer;
+        }
+
+        .footer-link {
+            padding: 0.2rem 0.4rem;
+            color: #fff;
+            text-decoration: none;
+        }
+
+        .footer-link:hover {
+            background-color: #5d9472;
+            transition: 0.6s;
+        }
+
+        .footer-copyright {
+            font-size: 0.6rem;
+            text-align: right;
+            margin-top: 1rem;
+        }
+
+        /* Main content */
+        .main-content {
+            min-height: calc(100vh - var(--sgd-footer-h) - var(--sgd-footer-margin-top) - var(--sgd-header-h));
+        }
+
+        /* Responsive */
+        @media (max-width: 671px) {
+            .hero-text-line {
+                font-size: 1.5rem;
+            }
+            .hero-text-first-line {
+                font-size: 1.5rem;
+            }
+            .col-sm-2 {
+                width: 100%;
+            }
+            .col-condensed {
+                padding: 0 5%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-left">
+            <a href="/" class="header-left-item">
+                <img class="header-logo" src="images/DaskLogo.png" alt="DASK Solutions">
+            </a>
+        </div>
+        <div class="header-right">
+            <a href="/" class="header-right-item">Home</a>
+            <a href="mailto:info@dasksolutions.com" class="header-right-item">Contact Us</a>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Hero Section -->
+        <section class="hero-bleed">
+            <div class="grid">
+                <div class="hero-container">
+                    <div class="hero-text-container">
+                        <div class="hero-text-first-line">Single Application to:</div>
+                        <div class="hero-text-line">
+                            <svg class="hero-text-icon" viewBox="0 0 32 32"><path d="M14 21.414L9 16.413 10.413 15 14 18.586 21.585 11 23 12.415 14 21.414z"/><path d="M16 2a14 14 0 1014 14A14 14 0 0016 2zm0 26a12 12 0 1112-12 12 12 0 01-12 12z"/></svg>
+                            <div>Enter Site Data Digitally</div>
+                        </div>
+                        <div class="hero-text-line">
+                            <svg class="hero-text-icon" viewBox="0 0 32 32"><path d="M14 21.414L9 16.413 10.413 15 14 18.586 21.585 11 23 12.415 14 21.414z"/><path d="M16 2a14 14 0 1014 14A14 14 0 0016 2zm0 26a12 12 0 1112-12 12 12 0 01-12 12z"/></svg>
+                            <div>Manage Lab Results</div>
+                        </div>
+                        <div class="hero-text-line">
+                            <svg class="hero-text-icon" viewBox="0 0 32 32"><path d="M14 21.414L9 16.413 10.413 15 14 18.586 21.585 11 23 12.415 14 21.414z"/><path d="M16 2a14 14 0 1014 14A14 14 0 0016 2zm0 26a12 12 0 1112-12 12 12 0 01-12 12z"/></svg>
+                            <div>Create &amp; Distribute Reports</div>
+                        </div>
+                        <div class="hero-btn-container">
+                            <a href="mailto:info@dasksolutions.com" class="btn-secondary">
+                                <svg viewBox="0 0 16 16"><path d="M8.5 11V6.5h-1V11H8.5zM8 3.5c-.4 0-.8.3-.8.8S7.6 5 8 5c.4 0 .8-.3.8-.8S8.4 3.5 8 3.5z"/><path d="M8 15c-3.9 0-7-3.1-7-7s3.1-7 7-7 7 3.1 7 7S11.9 15 8 15zM8 2C4.7 2 2 4.7 2 8s2.7 6 6 6 6-2.7 6-6S11.3 2 8 2z"/></svg>
+                                Request a Quotation or Demo
+                            </a>
+                        </div>
+                    </div>
+                    <div class="hero-img-container">
+                        <img class="hero-img" src="images/cylinders-homepage.png" alt="Lab Testing">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Main Section Header -->
+        <div class="grid">
+            <div class="row content-row">
+                <div class="col">
+                    <div class="row-card">
+                        <h1 class="row-card-header">Lab Management Software Solution</h1>
+                        <p class="row-card-subheader">Organize and Operate with Efficiency</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Feature Icons Row -->
+            <div class="row">
+                <div class="col col-sm-4 col-md-4 col-lg-4 col-spacer">
+                    <div class="icon-exp-buffer">
+                        <div class="icon-exp">
+                            <div class="icon-exp-icon-container">
+                                <img class="icon-exp-icon" src="images/web.svg" alt="Web Access">
+                            </div>
+                            <p class="icon-exp-text">Access your data and reports from anywhere you have internet and a browser. Don't wait to get into the office.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col col-sm-4 col-md-4 col-lg-4 col-spacer">
+                    <div class="icon-exp-buffer">
+                        <div class="icon-exp">
+                            <div class="icon-exp-icon-container">
+                                <img class="icon-exp-icon" src="images/key-users.svg" alt="Role Based Access">
+                            </div>
+                            <p class="icon-exp-text">Each role has access to features in the app based on their tasks. Simple steps to complete daily work.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col col-sm-4 col-md-4 col-lg-4 col-spacer">
+                    <div class="icon-exp-buffer">
+                        <div class="icon-exp">
+                            <div class="icon-exp-icon-container">
+                                <img class="icon-exp-icon" src="images/collaboration.svg" alt="Collaboration">
+                            </div>
+                            <p class="icon-exp-text">Staff can perform their tasks and collaborate with their teams using a single software.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col col-sm-4 col-md-4 col-lg-4 col-spacer">
+                    <div class="icon-exp-buffer">
+                        <div class="icon-exp">
+                            <div class="icon-exp-icon-container">
+                                <img class="icon-exp-icon" src="images/accelerated-results.svg" alt="Accelerated Results">
+                            </div>
+                            <p class="icon-exp-text">Make results available immediately and generate reports as soon as data is entered and reviewed.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Single Source of Truth Section -->
+            <div class="row row-a">
+                <div class="col col-sm-4 col-md-4 col-centered">
+                    <div class="exp-card">
+                        <h2 class="exp-card-title">Single Source of Truth</h2>
+                        <p class="exp-card-content">Enter measured data and test results directly into the application. Eliminate paper or spreadsheets.</p>
+                        <p class="exp-card-content">Environmentally smart and sustainable choice to eliminate or significantly reduce the use of paper.</p>
+                    </div>
+                </div>
+                <div class="col col-sm-4 col-md-4 col-spacing">
+                    <div class="pic-card-container">
+                        <div class="pic-card-bg">
+                            <img class="pic-card-img" src="images/measure-to-app.svg" alt="Measure to App">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Privacy Section -->
+            <div class="row row-card-section">
+                <div class="col col-condensed">
+                    <div class="icon-exp-row-buffer">
+                        <div class="icon-exp-row">
+                            <div class="icon-exp-row-icon-container">
+                                <img class="icon-exp-row-icon" src="images/data-privacy.svg" alt="Data Privacy">
+                            </div>
+                            <h2 class="icon-exp-row-header">Privacy</h2>
+                            <p class="icon-exp-row-subheader">Your Dedicated Servers</p>
+                            <p class="icon-exp-row-body">Privacy is our paramount concern. Each web application is a dedicated instance for each client. Your data and results are only accessible by your authorized users.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Role Based Access Section -->
+            <div class="row row-b">
+                <div class="col col-sm-4 col-md-4 col-centered">
+                    <div class="exp-card">
+                        <h2 class="exp-card-title">Role Based Access</h2>
+                        <p class="exp-card-content">Staff access is determined by their Roles and Responsibilities.</p>
+                        <p class="exp-card-content">Simple training, improved speed and efficiency.</p>
+                    </div>
+                </div>
+                <div class="col col-sm-4 col-md-4 col-spacing">
+                    <div class="pic-card-container">
+                        <div class="pic-card-bg">
+                            <img class="pic-card-img" src="images/roles.svg" alt="Roles">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Certification Section -->
+            <div class="row row-card-section">
+                <div class="col col-condensed">
+                    <div class="icon-exp-row-buffer">
+                        <div class="icon-exp-row">
+                            <div class="icon-exp-row-icon-container">
+                                <img class="icon-exp-row-icon" src="images/cert.svg" alt="Certification">
+                            </div>
+                            <h2 class="icon-exp-row-header">National Certification Agency Reports</h2>
+                            <p class="icon-exp-row-subheader">Simplify CCIL Compliance Requirements</p>
+                            <p class="icon-exp-row-body">Generate reports such as Weekly Load Rate, Planeness & Perpendicularity and Lab Proficiency with ease. Make it part of the process, to consistently generate, track report generation and missing reports.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Well Defined Process Section -->
+            <div class="row row-c">
+                <div class="col col-sm-4 col-md-4 col-centered">
+                    <div class="exp-card">
+                        <h2 class="exp-card-title">Well Defined Process</h2>
+                        <p class="exp-card-content">Streamlined process, from data entry at the site, lab test results entry, through distribution of reports.</p>
+                        <p class="exp-card-content">Digitized report generation and automated report distribution to defined project contacts.</p>
+                    </div>
+                </div>
+                <div class="col col-sm-4 col-md-4 col-spacing">
+                    <div class="pic-card-container">
+                        <div class="pic-card-bg">
+                            <img class="pic-card-img" src="images/flow.svg" alt="Process Flow">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Feature Columns -->
+            <div class="row">
+                <div class="col col-sm-2 col-md-4 col-lg-4 col-spacer">
+                    <div class="col-exp-card">
+                        <h3 class="col-exp-card-title">Daily Activities</h3>
+                        <p class="col-exp-card-content">Optimize lab technician's daily activities.</p>
+                        <p class="col-exp-card-content">Maintain an online schedule of daily tests, and visually identify delays.</p>
+                    </div>
+                </div>
+                <div class="col col-sm-2 col-md-4 col-lg-4 col-spacer">
+                    <div class="col-exp-card">
+                        <h3 class="col-exp-card-title">Workflow</h3>
+                        <p class="col-exp-card-content">Establish an efficient lab workflow. Each role can access capabilities relevant to them.</p>
+                        <p class="col-exp-card-content">Visibility of field samples in process, testing, reviews, distributions and billing.</p>
+                    </div>
+                </div>
+                <div class="col col-sm-2 col-md-4 col-lg-4 col-spacer">
+                    <div class="col-exp-card">
+                        <h3 class="col-exp-card-title">Statistical Analysis</h3>
+                        <p class="col-exp-card-content">On-going statistical analysis and trend lines for each concrete mix design - provide concrete mix-specific analytics, flagging and QA/QC monitoring.</p>
+                    </div>
+                </div>
+                <div class="col col-sm-2 col-md-4 col-lg-4 col-spacer">
+                    <div class="col-exp-card">
+                        <h3 class="col-exp-card-title">Distribution</h3>
+                        <p class="col-exp-card-content">Electronic distribution of test results.</p>
+                        <p class="col-exp-card-content">Reduce the administrative costs, printing and postage costs associated with concrete testing laboratories.</p>
+                        <p class="col-exp-card-content">Enables distribution of Test Reports in an industry-leading turnaround time.</p>
+                    </div>
+                </div>
+                <div class="col col-sm-2 col-md-4 col-lg-4 col-spacer">
+                    <div class="col-exp-card">
+                        <h3 class="col-exp-card-title">Billing</h3>
+                        <p class="col-exp-card-content">Simplify the financial aspects for billing and invoices for a testing laboratory.</p>
+                    </div>
+                </div>
+                <div class="col col-sm-2 col-md-4 col-lg-4 col-spacer">
+                    <div class="col-exp-card">
+                        <h3 class="col-exp-card-title">Compliance</h3>
+                        <p class="col-exp-card-content">Automated generation of the reporting and tabulation of national certification agencies requirements for concrete testing laboratories, such as CCIL</p>
+                    </div>
+                </div>
+                <div class="col col-sm-2 col-md-4 col-lg-4 col-spacer">
+                    <div class="col-exp-card">
+                        <h3 class="col-exp-card-title">Sustainability</h3>
+                        <p class="col-exp-card-content">Electronic, paperless site data entry. Eliminate paper test card and records, no multi-touch surfaces.</p>
+                        <p class="col-exp-card-content">Eliminate the added cost of administration and in-lab data entry.</p>
+                    </div>
+                </div>
+                <div class="col col-sm-2 col-md-4 col-lg-4 col-spacer">
+                    <div class="col-exp-card">
+                        <h3 class="col-exp-card-title">Digitized Results</h3>
+                        <p class="col-exp-card-content">Well-organized, electronic database of test results.</p>
+                        <p class="col-exp-card-content">Secure, digital and easily searchable database of test results.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-links">
+            <a href="mailto:info@dasksolutions.com" class="footer-link">Contact Us</a>
+            <a href="#" class="footer-link">Terms of Service</a>
+        </div>
+        <div class="footer-copyright">
+            &copy; 2024 DASK Solutions Inc. All rights reserved.
+        </div>
+    </footer>
+</body>
+</html>
